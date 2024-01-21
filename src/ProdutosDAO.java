@@ -42,7 +42,21 @@ public class ProdutosDAO {
     }
     
     public ArrayList<ProdutosDTO> listarProdutos(){
-        
+        String sql = "SELECT * FROM produtos";
+        conn = new conectaDAO().connectDB();
+
+        try {
+            prep = conn.prepareStatement(sql);
+            resultset = prep.executeQuery();
+            while(resultset.next()){
+                int id = resultset.getInt("id");
+                int valor = resultset.getInt("valor");
+                String nome = resultset.getString("nome");
+                String status = resultset.getString("status");
+                listagem.add(new ProdutosDTO(id, nome, valor, status));
+            }
+        } catch (SQLException e) {     
+        }
         return listagem;
     }
     
