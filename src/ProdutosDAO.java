@@ -60,8 +60,41 @@ public class ProdutosDAO {
         return listagem;
     }
     
+    public ArrayList<ProdutosDTO> listarProdutosVendidos(){
+        String sql = "SELECT * FROM produtos WHERE status = 'Vendido'";
+        conn = new conectaDAO().connectDB();
+        
+        try {
+            prep = conn.prepareStatement(sql);
+            resultset = prep.executeQuery();
+            while(resultset.next()){
+                int id = resultset.getInt("id");
+                int valor = resultset.getInt("valor");
+                String nome = resultset.getString("nome");
+                String status = resultset.getString("status");
+                listagem.add(new ProdutosDTO(id, nome, valor, status));
+            }
+        } catch (SQLException e) {     
+        }
+        return listagem;
+    }
     
-    
+    public void venderProduto(int id) {
+        conn = new conectaDAO().connectDB();
+        String sql = "UPDATE produtos SET status = 'Vendido' WHERE id=? AND status = 'A venda'";
+        try {
+            prep = conn.prepareStatement(sql);
+            prep.setInt(1, id);
+            int rowsAfected = prep.executeUpdate();
+            if (rowsAfected > 0){
+                JOptionPane.showMessageDialog(null, "Venda realizada com sucecsso");
+            } else {
+                JOptionPane.showMessageDialog(null, "Venda não realizada, verifique o ID do produto digitado");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao concluir venda do pedido:\n" + e);
+        }
+    }
         
 }
 
